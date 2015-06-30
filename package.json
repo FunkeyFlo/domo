@@ -23,7 +23,8 @@
     "passport": "*",
     "passport-local": "*",
     "connect-flash" : "~0.1.1",
-    "bcrypt-nodejs" : "latest"
+    "bcrypt-nodejs" : "latest",
+    "mysql": "*"
   },
   "devDependencies": {
     "bluebird": "^2.9.25",

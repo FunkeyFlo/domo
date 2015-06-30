@@ -1,6 +1,13 @@
 {
-  "development": {
+  "production": {
     "dialect": "sqlite",
     "storage": "./db.development.sqlite"
+  },
+  "development": {
+    "username": "root",
+    "password": "1234",
+    "database": "domo",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   }
 }
