@@ -25,7 +25,6 @@ module.exports = function (io) {
 
 function checkIfCommandMatches(command, dbCommand) {
     if (command.text == dbCommand) {
-        console.log('sex in de citie');
         executeCommand(command);
         return true;
     }
@@ -35,20 +34,16 @@ function executeCommand(command) {
     models.Task.findOne({
         where: {id: command.TaskId}
     }).then(function (task) {
-        kaku(task.cmd);
-    });
-}
-
-var kaku = function (cmd) {
-    exec(cmd, function (error, stdout, stderr) {
-        if (stdout !== null) {
-            console.log('stdout: ' + stdout);
-        }
-        if (stderr !== null) {
-            console.log('stderr: ' + stderr);
-        }
-        if (error !== null) {
-            console.log('exec error: ' + error);
-        }
+        exec(task.cmd, function (error, stdout, stderr) {
+            if (stdout !== null) {
+                console.log('stdout: ' + stdout);
+            }
+            if (stderr !== null) {
+                console.log('stderr: ' + stderr);
+            }
+            if (error !== null) {
+                console.log('exec error: ' + error);
+            }
+        });
     });
 }
