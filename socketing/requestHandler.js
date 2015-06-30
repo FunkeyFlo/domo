@@ -10,9 +10,12 @@ module.exports = function (io) {
             models.Command.find({
                 where: {text: data.command},
                 include: [models.Task]
-            }).then(function (err, command) {
-                if (!err) {
-
+            }).then(function (command) {
+                if (typeof command.Tasks === 'undefined') {
+                    socket.emit('message', {
+                        message: "commando: " + data.command + " is niet bekend"
+                    });
+                } else {
                     var timeTrack = 0;
 
                     var tasks = command.Tasks;
@@ -24,10 +27,6 @@ module.exports = function (io) {
                     });
                     socket.emit('message', {
                         message: command.response
-                    });
-                } else {
-                    socket.emit('message', {
-                        message: "commando: " + data.command + " is niet bekend"
                     });
                 }
             });
