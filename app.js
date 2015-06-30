@@ -56,11 +56,11 @@ models.sequelize.sync().then(function () {
     });
 });
 
-models.User.create({
-    username: 'admin',
-    password: bcrypt.hashSync('admin', bcrypt.genSaltSync(8), null)
-    //password: 'admin'
-});
+//models.User.create({
+//    username: 'admin',
+//    password: bcrypt.hashSync('admin', bcrypt.genSaltSync(8), null)
+//    //password: 'admin'
+//});
 
 // ROUTES
 require('./routes/index')(app, passport);
