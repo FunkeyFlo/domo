@@ -1,0 +1,53 @@
+extends layout/nav
+
+block subContent
+
+    // Page Content
+    #page-wrapper
+        .container-fluid
+            .row
+                .col-lg-12
+                    h1.page-header Domo - Command Centre
+            .row
+
+                .row
+                    .col-lg-12
+                        .panel.panel-default
+                            .panel-heading
+                                | Voeg uw eigen commando's toe!
+                            .panel-body
+                                h2 Nieuwe opdracht aanmaken
+                                form(action="/create", method="post")
+                                    input(placeholder='Titel', type="text", name="title")
+                                    br
+                                    input(placeholder='Commandline commando', type="text", name="cmd")
+                                    br
+                                    input(type="submit")
+
+                                h2 Opdrachten
+
+                                ul
+                                each task in tasks
+                                    li
+                                        = task.title
+                                        | &nbsp;
+                                        | (
+                                        a(href="/" + task.id + "/destroy") Destroy
+                                        | )
+                                        ul
+                                            li
+                                                | Nieuw commando maken!:
+                                                form(action="/" + task.id + "/commands/create", method="post", style="display: inline")
+                                                    input(placeholder='Text voor commando', type="text", name="text")
+                                                    br
+                                                    input(placeholder='Reactie op commando', type="text", name="response")
+                                                    br
+                                                    input(type="submit")
+                                            each command in task.Commands
+                                                li
+                                                    = task.title
+                                                    | &nbsp;
+                                                    | (
+                                                    a(href="/" + task.id + "/commands/" + command.id + "/destroy") Destroy
+                                                    | )
+                include functionality/voice

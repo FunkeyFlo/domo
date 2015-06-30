@@ -7,11 +7,18 @@ module.exports = function (app, passport) {
 
     // INDEX PAGE
     app.get('/', isLoggedIn, function (req, res) {
+        res.render('index', {
+            title: 'Domo - Dashboard',
+            loggedInUser: req.user
+        });
+    });
+
+    app.get('/command-centre', isLoggedIn, function (req, res) {
         models.Task.findAll({
             include: [models.Command]
         }).then(function (tasks) {
-            res.render('index', {
-                title: 'Express',
+            res.render('commandcentre', {
+                title: 'Domo - Command-Centre',
                 tasks: tasks,
                 loggedInUser: req.user
             });
