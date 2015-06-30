@@ -11,22 +11,25 @@ module.exports = function (io) {
                 where: {text: data.command},
                 include: [models.Task]
             }).then(function (command) {
+                if (command.Task != null) {
 
-                var timeTrack = 0;
+                    var timeTrack = 0;
 
-                console.log(command + '==============================');
-                console.log(command.Tasks + '==============================');
+                    var tasks = command.Tasks;
 
-                var tasks = command.Tasks;
-
-                tasks.forEach(function (task) {
-                    setTimeout(function () {
-                        executeCommand(task);
-                    }, timeTrack += 1250);
-                });
-                socket.emit('message', {
-                    message: command.response
-                });
+                    tasks.forEach(function (task) {
+                        setTimeout(function () {
+                            executeCommand(task);
+                        }, timeTrack += 1250);
+                    });
+                    socket.emit('message', {
+                        message: command.response
+                    });
+                } else {
+                    socket.emit('message', {
+                        message: "commando: " + data.command + " is niet bekend"
+                    });
+                }
             });
         });
     });
