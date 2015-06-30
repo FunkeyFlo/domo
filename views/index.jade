@@ -1,0 +1,153 @@
+extends layout/nav
+
+block subContent
+
+    // Page Content
+    #page-wrapper
+        .container-fluid
+            .row
+                .col-lg-12
+                    h1.page-header Welcome !
+            .row
+                .col-lg-4.col-md-6
+                    .panel.panel-primary
+                        .panel-heading
+                            .row
+                                .col-xs-3
+                                    i.fa.fa-comment.fa-5x
+                                .col-xs-9.text-right
+                                    .huge 26
+                                    div Commands used today!
+                        a(href='#')
+                            .panel-footer
+                                span.pull-left View Details
+                                span.pull-right
+                                    i.fa.fa-arrow-circle-right
+                                .clearfix
+                .col-lg-4.col-md-6
+                    .panel.panel-green
+                        .panel-heading
+                            .row
+                                .col-xs-3
+                                    i.fa.fa-coffee.fa-5x
+                                .col-xs-9.text-right
+                                    .huge 12
+                                    div Devices in use now!
+                        a(href='#')
+                            .panel-footer
+                                span.pull-left View Details
+                                span.pull-right
+                                    i.fa.fa-arrow-circle-right
+                                .clearfix
+                .col-lg-4.col-md-6
+                    .panel.panel-yellow
+                        .panel-heading
+                            .row
+                                .col-xs-3
+                                    i.fa.fa-clock-o.fa-5x
+                                .col-xs-9.text-right
+                                    .huge
+                                        #txt
+                                    div System online time!
+                        a(href='#')
+                            .panel-footer
+                                span.pull-left View Details
+                                span.pull-right
+                                    i.fa.fa-arrow-circle-right
+                                .clearfix
+
+                .row
+                    .col-lg-12
+                        .panel.panel-default
+                            .panel-heading
+                                | Voeg uw eigen commando's toe!
+                            .panel-body
+                                h2 Nieuwe opdracht aanmaken
+                                form(action="/create", method="post")
+                                    input(placeholder='Titel', type="text", name="title")
+                                    br
+                                    input(placeholder='Commandline commando', type="text", name="cmd")
+                                    br
+                                    input(type="submit")
+
+                                h2 Opdrachten
+
+                                ul
+                                each task in tasks
+                                    li
+                                        = task.title
+                                        | &nbsp;
+                                        | (
+                                        a(href="/" + task.id + "/destroy") Destroy
+                                        | )
+                                        ul
+                                            li
+                                                | Nieuw commando maken!:
+                                                form(action="/" + task.id + "/commands/create", method="post", style="display: inline")
+                                                    input(placeholder='Text voor commando', type="text", name="text")
+                                                    br
+                                                    input(placeholder='Reactie op commando', type="text", name="response")
+                                                    br
+                                                    input(type="submit")
+                                            each command in task.Commands
+                                                li
+                                                    = task.title
+                                                    | &nbsp;
+                                                    | (
+                                                    a(href="/" + task.id + "/commands/" + command.id + "/destroy") Destroy
+                                                    | )
+
+                script.
+                    var socket = io();
+                    var speech = function (message) {
+                        if ('speechSynthesis' in window) {
+                            var msg = new SpeechSynthesisUtterance();
+                            var voices = speechSynthesis.getVoices();
+                            msg.lang = 'nl-NL';
+                            msg.voice = voices[0];
+                            msg.rate = 1; // 0.1 to 10
+                            msg.text = message;
+                            speechSynthesis.speak(msg);
+                        } else {
+                            alert(message);
+                        }
+                    }
+
+                    if (annyang) {
+                        var domo = function (param) {
+                            socket.emit('request', {command: param});
+                            //speech(param);
+                        }
+
+                        var commands = {
+                            'Domo *param': domo
+                        }
+
+                        // Start Debug
+                        annyang.debug();
+
+                        // Add our commands to annyang
+                        annyang.addCommands(commands);
+
+                        // Start listening. You can call this here, or attach this call to an event, button, etc.
+                        annyang.start();
+                    }
+
+                script.
+                    var socket = io();
+
+                    if ('speechSynthesis' in window) {
+                        socket.on('message', function (data) {
+                            var msg = new SpeechSynthesisUtterance();
+                            var voices = speechSynthesis.getVoices();
+                            msg.lang = 'nl-NL';
+                            msg.voice = voices[0];
+                            msg.rate = 1; // 0.1 to 10
+                            msg.text = data.message;
+                            speechSynthesis.speak(msg);
+                        });
+                    } else {
+                        socket.on('message', function (data) {
+                            alert(data.message);
+                        });
+                    }
