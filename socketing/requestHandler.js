@@ -10,8 +10,8 @@ module.exports = function (io) {
             models.Command.find({
                 where: {text: data.command},
                 include: [models.Task]
-            }).then(function (command) {
-                if (command.Task !== null) {
+            }).then(function (err, command) {
+                if (!err) {
 
                     var timeTrack = 0;
 
