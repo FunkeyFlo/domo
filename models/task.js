@@ -7,7 +7,7 @@ module.exports = function (sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function (models) {
-                Task.hasMany(models.Command);
+                Task.belongsTo(models.Command);
             }
         }
     });

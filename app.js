@@ -6,7 +6,6 @@ var logger = require('morgan');
 // SECURITY and MESSAGING
 var passport = require('passport');
 var flash = require('connect-flash');
-var bcrypt = require('bcrypt-nodejs');
 
 // SESSIONS and COOKIES
 var cookieParser = require('cookie-parser');
@@ -55,12 +54,6 @@ models.sequelize.sync().then(function () {
         console.log(message);
     });
 });
-
-//models.User.create({
-//    username: 'admin',
-//    password: bcrypt.hashSync('admin', bcrypt.genSaltSync(8), null)
-//    //password: 'admin'
-//});
 
 // ROUTES
 require('./routes/index')(app, passport);

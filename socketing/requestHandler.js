@@ -7,43 +7,43 @@ module.exports = function (io) {
         socket.on('request', function (data) {
             console.log('======================== DIT KWAM ER BINNEN ========================')
             console.log(data);
-            socket.emit('message', {
-                message: data.command
-            });
-            models.Command.findAll(
-            ).then(function (commands) {
-                    commands.some(function (command) {
-                        //console.log(index + ": " + value);
-                        console.log(command.text)
-                        return checkIfCommandMatches(command, data.command);
-                    });
+            models.Command.find({
+                where: {text: data.command},
+                include: [models.Task]
+            }).then(function (command) {
+
+                var timeTrack = 0;
+
+                console.log(command + '==============================');
+                console.log(command.Tasks + '==============================');
+
+                var tasks = command.Tasks;
+
+                tasks.forEach(function (task) {
+                    setTimeout(function () {
+                        executeCommand(task);
+                    }, timeTrack += 1250);
                 });
+                socket.emit('message', {
+                    message: command.response
+                });
+            });
         });
     });
-
 }
 
-function checkIfCommandMatches(command, dbCommand) {
-    if (command.text == dbCommand) {
-        executeCommand(command);
-        return true;
-    }
-}
+function executeCommand(task) {
+    exec(task.cmd, function (error, stdout, stderr) {
+        if (stdout !== null) {
+            console.log('stdout: ' + stdout);
+        }
 
-function executeCommand(command) {
-    models.Task.findOne({
-        where: {id: command.TaskId}
-    }).then(function (task) {
-        exec(task.cmd, function (error, stdout, stderr) {
-            if (stdout !== null) {
-                console.log('stdout: ' + stdout);
-            }
-            if (stderr !== null) {
-                console.log('stderr: ' + stderr);
-            }
-            if (error !== null) {
-                console.log('exec error: ' + error);
-            }
-        });
+        if (stderr !== null) {
+            console.log('stderr: ' + stderr);
+        }
+
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
     });
 }

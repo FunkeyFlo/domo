@@ -1,5 +1,5 @@
 var models = require('../models');
-//var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt-nodejs');
 
 module.exports = function (app, passport) {
 
@@ -14,66 +14,78 @@ module.exports = function (app, passport) {
     });
 
     app.get('/command-centre', isLoggedIn, function (req, res) {
-        models.Task.findAll({
-            include: [models.Command]
-        }).then(function (tasks) {
+        models.Command.findAll({
+            include: [models.Task]
+        }).then(function (commands) {
             res.render('commandcentre', {
                 title: 'Domo - Command-Centre',
-                tasks: tasks,
+                commands: commands,
+                loggedInUser: req.user
+            });
+        });
+    });
+
+    app.get('/command-centre-old', isLoggedIn, function (req, res) {
+        models.Command.findAll({
+            include: [models.Task]
+        }).then(function (commands) {
+            res.render('commandcentre_OLD', {
+                title: 'Domo - Command-Centre',
+                commands: commands,
                 loggedInUser: req.user
             });
         });
     });
 
     app.post('/create', isLoggedIn, function (req, res) {
-        models.Task.create({
-            title: req.param('title'),
-            cmd: req.param('cmd')
+        models.Command.create({
+            text: req.param('text'),
+            response: req.param('response')
         }).then(function () {
-            res.redirect('/');
+            res.redirect('/command-centre');
         });
     });
 
-    app.get('/:task_id/destroy', isLoggedIn, function (req, res) {
-        models.Task.find({
-            where: {id: req.param('task_id')},
-            include: [models.Command]
-        }).then(function (task) {
-            models.Command.destroy(
-                {where: {TaskId: task.id}}
+    app.get('/:command_id/destroy', isLoggedIn, function (req, res) {
+        models.Command.find({
+            where: {id: req.param('command_id')},
+            include: [models.Task]
+        }).then(function (command) {
+            models.Task.destroy(
+                {where: {CommandId: command.id}}
             ).then(function (affectedRows) {
-                    task.destroy().then(function () {
-                        res.redirect('/');
+                    command.destroy().then(function () {
+                        res.redirect('/command-centre');
                     });
                 });
         });
     });
 
-    app.post('/:task_id/commands/create', isLoggedIn, function (req, res) {
-        models.Task.find({
-            where: {id: req.param('task_id')}
-        }).then(function (task) {
-            models.Command.create({
-                text: req.param('text'),
-                response: req.param('response')
+    app.post('/:command_id/tasks/create', isLoggedIn, function (req, res) {
+        models.Command.find({
+            where: {id: req.param('command_id')}
+        }).then(function (command) {
+            models.Task.create({
+                title: req.param('title'),
+                cmd: req.param('cmd')
             }).then(function (title) {
-                title.setTask(task).then(function () {
-                    res.redirect('/');
+                title.setCommand(command).then(function () {
+                    res.redirect('/command-centre');
                 });
             });
         });
     });
 
-    app.get('/:task_id/commands/:command_id/destroy', isLoggedIn, function (req, res) {
-        models.Task.find({
-            where: {id: req.param('task_id')}
-        }).then(function (task) {
-            models.Command.find({
-                where: {id: req.param('command_id')}
-            }).then(function (command) {
-                command.setTask(null).then(function () {
-                    command.destroy().then(function () {
-                        res.redirect('/');
+    app.get('/:command_id/tasks/:task_id/destroy', isLoggedIn, function (req, res) {
+        models.Command.find({
+            where: {id: req.param('command_id')}
+        }).then(function (command) {
+            models.Task.find({
+                where: {id: req.param('task_id')}
+            }).then(function (task) {
+                task.setCommand(null).then(function () {
+                    task.destroy().then(function () {
+                        res.redirect('/command-centre');
                     });
                 });
             });
@@ -102,6 +114,90 @@ module.exports = function (app, passport) {
     app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/login');
+    });
+
+    // FOR TESTING PURPOSES ============================================================
+    app.get('/destroy-database', function (req, res) {
+        models.sequelize.sync({force: true});
+    });
+
+    app.get('/create-admin', function (req, res) {
+        models.User.create({
+            username: 'admin',
+            password: bcrypt.hashSync('admin', bcrypt.genSaltSync(8), null)
+            //password: 'admin'
+        });
+    });
+
+    app.get('/seed-db', function (req, res) {
+        models.User.create({
+            username: 'admin',
+            password: bcrypt.hashSync('admin', bcrypt.genSaltSync(8), null)
+            //password: 'admin'
+        });
+
+        // 1
+        models.Command.create({
+            text: 'nachtlamp aan',
+            response: 'Nachtlamp staat nu aan!'
+        });
+        models.Command.create({
+            text: 'nachtlamp uit',
+            response: 'Nachtlamp staat nu uit!'
+        });
+
+        // 3
+        models.Command.create({
+            text: 'ventilator aan',
+            response: 'Ventilator staat nu aan!'
+        });
+        models.Command.create({
+            text: 'ventilator uit',
+            response: 'Ventilator staat nu uit!'
+        });
+
+        // 5
+        models.Command.create({
+            text: 'bureaulamp aan',
+            response: 'Bureaulamp staat nu aan!'
+        });
+        models.Command.create({
+            text: 'bureaulamp uit',
+            response: 'Bureaulamp staat nu uit!'
+        });
+
+        models.Task.create({
+            title: 'Nachtlamp aan',
+            cmd: 'kaku C 1 on',
+            CommandId: '1'
+        });
+        models.Task.create({
+            title: 'Nachtlamp uit',
+            cmd: 'kaku C 1 off',
+            CommandId: '2'
+        });
+
+        models.Task.create({
+            title: 'Ventilator aan',
+            cmd: 'kaku C 2 on',
+            CommandId: '3'
+        });
+        models.Task.create({
+            title: 'Ventilator uit',
+            cmd: 'kaku C 2 off',
+            CommandId: '4'
+        });
+
+        models.Task.create({
+            title: 'Bureaulamp aan',
+            cmd: 'kaku zzxyz 20484 on',
+            CommandId: '5'
+        });
+        models.Task.create({
+            title: 'Bureaulamp uit',
+            cmd: 'kaku zzxyz 20484 off',
+            CommandId: '6'
+        });
     });
 };
 
