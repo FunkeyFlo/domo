@@ -14,18 +14,12 @@
     "jade": "~1.6.0",
     "morgan": "~1.3.0",
     "serve-favicon": "~2.1.3",
-
-    // Database
     "sequelize": "^2.0.0-rc1",
     "sequelize-cli": "^0.3.0",
     "sqlite3": "^3.0.1",
-
-    // DOMO requirements
     "socket.io": "*",
     "samsung-remote": "1.2.4",
     "exec": "*",
-
-    // Passport
     "passport": "*",
     "passport-local": "*",
     "connect-flash" : "~0.1.1",
