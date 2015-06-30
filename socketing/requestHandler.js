@@ -11,7 +11,7 @@ module.exports = function (io) {
                 where: {text: data.command},
                 include: [models.Task]
             }).then(function (command) {
-                if (command.Task != null) {
+                if (command.Task !== null) {
 
                     var timeTrack = 0;
 
