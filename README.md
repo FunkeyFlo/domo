@@ -21,15 +21,44 @@ steps according to your needs. Please note that the view and the routes aren't
 described. You can find those files in the repo.
 
 ```bash
-mkdir express-example
-cd express-example
-npm install express-generator
-node_modules/.bin/express -f
+
+sudo apt-get update && sudo apt-get upgrade
+
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+./build
+
+wget -O lights.zip https://www.dropbox.com/s/nxdrkuk94w9fpqo/lights.zip?dl=1
+unzip lights.zip
+rm -r lights.zip
+
+cd lights
+g++ -o kaku kaku.cpp -I/usr/local/include -L/usr/local/lib -lwiringPi
+
+sudo chown root /home/pi/wiringPi/lights/kaku
+sudo chmod ug+sx /home/pi/wiringPi/lights/kaku
+
+./kaku C 1 on
+./kaku C 1 off
+
+cd
+sudo nano .bashrc
+add - export PATH=$PATH:/home/pi/wiringPi/lights/
+
+bash
+
+wget http://node-arm.herokuapp.com/node_latest_armhf.deb
+sudo dpkg -i node_latest_armhf.deb
+
+node -v
+
+mkdir apps
+cd apps
+git clone https://github.com/FunkeyFlo/domo.git
+cd domo
 npm install
-npm install --save sequelize@2.0.0-rc1 sequelize-cli sqlite3
-node_modules/.bin/sequelize init
-node_modules/.bin/sequelize model:create --name User --attributes username:string
-node_modules/.bin/sequelize model:create --name Task --attributes title:string
+node app.js
+
 ```
 
 You will now have a basic express application with some additional directories
