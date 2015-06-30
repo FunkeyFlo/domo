@@ -61,57 +61,5 @@ node app.js
 
 ```
 
-You will now have a basic express application with some additional directories
-(config, models, migrations). Also you will find two migrations and models.
-One for the User and one for the Task.
-
-In order to associate the models with each other, you need to change the models
-like this:
-
-```js
-// task.js
-// ...
-classMethods: {
-  associate: function(models) {
-    Task.belongsTo(models.User);
-  }
-}
-// ...
-```
-
-```js
-// user.js
-// ...
-classMethods: {
-  associate: function(models) {
-    User.hasMany(models.Task)
-  }
-}
-// ...
-```
-
-If you want to use the automatic table creation that sequelize provides,
-you have to adjust the `bin/www` file to this:
-
-```js
-#!/usr/bin/env node
-
-var debug = require('debug')('express-example');
-var app = require('../app');
-var models = require("../models");
-
-app.set('port', process.env.PORT || 3000);
-
-models.sequelize.sync().then(function () {
-  var server = app.listen(app.get('port'), function() {
-    debug('Express server listening on port ' + server.address().port);
-  });
-});
-```
-
 And finally you have to adjust the `config/config.json` to fit your environment.
 Once thats done, your database configuration is ready!
-
-## The tests
-
-You can run the tests by executing `npm test`.
