@@ -1,14 +1,40 @@
 var models = require('../models');
 var exec = require('child_process').exec;
 
+var cookerInUse = false;
+var curtainOpen = false;
+var curtainInUse = false;
+
 module.exports = function (io) {
 
     io.on('connection', function (socket) {
         socket.on('request', function (data) {
 
-
-            // CURTAIN ---------------------------------------------
-            if(data.command.indexOf('gordijn') > -1) {
+            // WATER COOKER ----------------------------------------
+            if (data.command == 'kook water') {
+                if (!cookerInUse) {
+                    cookerInUse = true;
+                    //console.log(cookerInUse);
+                    kaku('C', '2', 'on');
+                    setTimeout(function () {
+                        kaku('C', '2', 'off');
+                        cookerInUse = false;
+                        socket.emit('message', {
+                            message: 'Water has been cooked!'
+                        });
+                    }, 18 * 10000);
+                    console.log('started cooking water');
+                    socket.emit('message', {
+                        message: 'In 3 minutes the water will be done cooking'
+                    });
+                } else {
+                    console.log('Cooker is already in use!');
+                    socket.emit('message', {
+                        message: 'Water is already cooking!'
+                    });
+                }
+            //CURTAIN
+            } else if(data.command.indexOf('gordijn') > -1) {
                 if (data.command == 'gordijn open') {
                     if (!curtainInUse) {
                         if (!curtainOpen) {
