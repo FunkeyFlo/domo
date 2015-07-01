@@ -12,6 +12,7 @@ module.exports = function (io) {
 
             // WATER COOKER ----------------------------------------
             if (data.command == 'kook water') {
+                console.log('WATER KOKEN ===========================')
                 if (!cookerInUse) {
                     cookerInUse = true;
                     //console.log(cookerInUse);
@@ -48,7 +49,7 @@ module.exports = function (io) {
                             }, 38 * 1000);
                             //code that will be executed immediately
                             curtainInUse = true;
-                            exec('sudo python scripts/omhoog.py', function (error, stdout, stderr) {
+                            exec('sudo python script/omhoog.py', function (error, stdout, stderr) {
                                 if (stdout !== null) {
                                     console.log('stdout: ' + stdout);
                                 }
@@ -91,7 +92,7 @@ module.exports = function (io) {
                             }, 38 * 1000);
                             //code that will be executed immediately
                             curtainInUse = true;
-                            exec('sudo python scripts/omlaag.py', function (error, stdout, stderr) {
+                            exec('sudo python script/omlaag.py', function (error, stdout, stderr) {
                                 if (stdout !== null) {
                                     console.log('stdout: ' + stdout);
                                 }
