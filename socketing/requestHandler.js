@@ -11,31 +11,36 @@ module.exports = function (io) {
         socket.on('request', function (data) {
 
             // WATER COOKER ----------------------------------------
-            if (data.command == 'kook water') {
-                console.log('WATER KOKEN ===========================')
-                if (!cookerInUse) {
-                    cookerInUse = true;
-                    //console.log(cookerInUse);
-                    kaku('C', '2', 'on');
-                    setTimeout(function () {
-                        kaku('C', '2', 'off');
-                        cookerInUse = false;
+
+            if (data.command.indexOf('kook') > -1) {
+                if (data.command == 'kook water') {
+                    console.log('WATER KOKEN ===========================')
+                    if (!cookerInUse) {
+                        cookerInUse = true;
+                        //console.log(cookerInUse);
+                        kaku('C', '2', 'on');
+                        setTimeout(function () {
+                            kaku('C', '2', 'off');
+                            cookerInUse = false;
+                            socket.emit('message', {
+                                message: 'Water has been cooked!'
+                            });
+                        }, 18 * 10000);
+                        console.log('started cooking water');
                         socket.emit('message', {
-                            message: 'Water has been cooked!'
+                            message: 'In 3 minutes the water will be done cooking'
                         });
-                    }, 18 * 10000);
-                    console.log('started cooking water');
-                    socket.emit('message', {
-                        message: 'In 3 minutes the water will be done cooking'
-                    });
-                } else {
-                    console.log('Cooker is already in use!');
-                    socket.emit('message', {
-                        message: 'Water is already cooking!'
-                    });
+                    } else {
+                        console.log('Cooker is already in use!');
+                        socket.emit('message', {
+                            message: 'Water is already cooking!'
+                        });
+                    }
+                    //CURTAIN
                 }
-            //CURTAIN
-            } else if(data.command.indexOf('gordijn') > -1) {
+            }
+
+            if (data.command.indexOf('gordijn') > -1) {
                 if (data.command == 'gordijn open') {
                     if (!curtainInUse) {
                         if (!curtainOpen) {
@@ -136,7 +141,7 @@ module.exports = function (io) {
                     socket.emit('message', {
                         message: command.response
                     });
-                }).catch(function(err){
+                }).catch(function (err) {
                     console.log(err);
                     socket.emit('message', {
                         message: "commando: " + data.command + " is niet bekend"
