@@ -43,7 +43,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-var debug = require('debug')('express-example');
+//var debug = require('debug')('express-example');
 
 app.set('port', process.env.PORT || 8080);
 

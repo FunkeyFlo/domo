@@ -9,6 +9,7 @@ module.exports = function (io) {
 
     io.on('connection', function (socket) {
         socket.on('request', function (data) {
+            console.log('RECEIVED COMMAND: ' + data.command + ' =======================');
             models.Command.find({
                 where: {text: data.command},
                 include: [models.Task]
