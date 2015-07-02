@@ -11,6 +11,7 @@ module.exports = function (io) {
 
         // KAKU Configurer
         socket.on('kaku', function (data) {
+            console.log('received: ' + data);
             executeCommand(data);
         });
 

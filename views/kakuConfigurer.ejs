@@ -62,9 +62,11 @@
 </body>
 
 <script>
+    var socket =io();
+
     function setKakuSignal() {
-        var kakuString = 'kaku' + document.getElementById(channel1) + ' ' + document.getElementById(channel2) + ' on';
-        alert('check of klik aan klik uit klikt, dan is de koppeling aan het signaal succesvol!')
+        var kakuString = 'kaku ' + document.getElementById("channel1").value + ' ' + document.getElementById("channel2").value + ' on';
+//        alert('check of klik aan klik uit klikt, dan is de koppeling aan het signaal succesvol!')
         socket.emit('kaku', kakuString);
     }
 </script>
