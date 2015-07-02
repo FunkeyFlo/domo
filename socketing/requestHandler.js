@@ -11,7 +11,8 @@ module.exports = function (io) {
         socket.on('request', function (data) {
             console.log('RECEIVED COMMAND: ' + data.command + ' =======================');
             models.Command.find({
-                where: {text: data.command},
+                // Cast all characters to lower string to ensure accuracy
+                where: {text: data.command.toLowerCase()},
                 include: [models.Task]
             }).then(function (command) {
                 var timeTrack = 0;

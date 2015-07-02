@@ -25,21 +25,10 @@ module.exports = function (app, passport) {
         });
     });
 
-    app.get('/command-centre-old', isLoggedIn, function (req, res) {
-        models.Command.findAll({
-            include: [models.Task]
-        }).then(function (commands) {
-            res.render('commandcentre_OLD', {
-                title: 'Domo - Command-Centre',
-                commands: commands,
-                loggedInUser: req.user
-            });
-        });
-    });
-
     app.post('/create', isLoggedIn, function (req, res) {
         models.Command.create({
-            text: req.param('text'),
+            // Cast all characters to lower string to ensure command search accuracy
+            text: req.param('text').toLowerCase(),
             response: req.param('response')
         }).then(function () {
             res.redirect('/command-centre');
