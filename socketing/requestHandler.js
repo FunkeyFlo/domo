@@ -8,6 +8,7 @@ var curtainInUse = false;
 module.exports = function (io) {
 
     io.on('connection', function (socket) {
+        // Command execution requests
         socket.on('request', function (data) {
             console.log('RECEIVED COMMAND: ' + data.command + ' =======================');
             models.Command.find({

@@ -13,6 +13,13 @@ module.exports = function (app, passport) {
         });
     });
 
+    app.get('/interpreter', isLoggedIn, function (req, res) {
+        res.render('interpreter', {
+            title: 'Domo - Interpreter',
+            loggedInUser: req.user
+        });
+    });
+
     app.get('/command-centre', isLoggedIn, function (req, res) {
         models.Command.findAll({
             include: [models.Task]
@@ -26,6 +33,8 @@ module.exports = function (app, passport) {
     });
 
     app.post('/create', isLoggedIn, function (req, res) {
+        console.log(req.param('text'));
+        console.log(req.param('response'));
         models.Command.create({
             // Cast all characters to lower string to ensure command search accuracy
             text: req.param('text').toLowerCase(),
