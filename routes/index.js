@@ -8,14 +8,21 @@ module.exports = function (app, passport) {
     // INDEX PAGE
     app.get('/', isLoggedIn, function (req, res) {
         res.render('index', {
-            title: 'Domo - Dashboard',
+            title: 'Dashboard',
             loggedInUser: req.user
         });
     });
 
     app.get('/interpreter', isLoggedIn, function (req, res) {
         res.render('interpreter', {
-            title: 'Domo - Interpreter',
+            title: 'Interpreter',
+            loggedInUser: req.user
+        });
+    });
+
+    app.get('/kaku-configurer', isLoggedIn, function (req, res) {
+        res.render('kakuConfigurer', {
+            title: 'Klik aan klik uit signaal instellen',
             loggedInUser: req.user
         });
     });
@@ -25,7 +32,7 @@ module.exports = function (app, passport) {
             include: [models.Task]
         }).then(function (commands) {
             res.render('commandcentre', {
-                title: 'Domo - Command-Centre',
+                title: 'Command-Centre',
                 commands: commands,
                 loggedInUser: req.user
             });

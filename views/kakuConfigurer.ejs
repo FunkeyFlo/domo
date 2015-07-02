@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../views/partials/head %>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation include -->
+    <% include ../views/partials/nav %>
+
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><%= title %></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Klik aan klik uit kanaal instellen
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-signal fa-fw"> 1</i>
+                                    </span>
+                                <input type="text" placeholder="bijv. xxxxx" class="form-control"
+                                       id="channel1">
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-signal fa-fw"> 2</i>
+                                </span>
+                                <input type="number" placeholder="bijv. 11111" class="form-control"
+                                       id="channel2">
+                            </div>
+                            <div class="button">
+                                <input onclick="setKakuSignal()" value="nieuw commando aanmaken!"
+                                       class="btn btn-success btn-md btn-block">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+
+<% include ../views/partials/end %>
+
+</body>
+
+<script>
+    function setKakuSignal() {
+        var kakuString = 'kaku' + document.getElementById(channel1) + ' ' + document.getElementById(channel2) + 'on';
+        alert('check of klik aan klik uit klikt, dan is de koppeling aan het signaal succesvol!')
+        socket.emit('kaku', kakuString);
+    }
+</script>

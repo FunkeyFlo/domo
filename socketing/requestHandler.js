@@ -8,6 +8,12 @@ var curtainInUse = false;
 module.exports = function (io) {
 
     io.on('connection', function (socket) {
+
+        // KAKU Configurer
+        socket.on('kaku', function (data) {
+            executeCommand(data);
+        });
+
         // Command execution requests
         socket.on('request', function (data) {
             console.log('RECEIVED COMMAND: ' + data.command + ' =======================');
