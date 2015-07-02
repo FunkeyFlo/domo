@@ -29,7 +29,7 @@ module.exports = function (io) {
 
                 tasks.forEach(function (task) {
                     setTimeout(function () {
-                        executeCommand(task);
+                        executeCommand(task.cmd);
                     }, timeTrack += 1250);
                 });
                 socket.emit('message', {
@@ -45,8 +45,8 @@ module.exports = function (io) {
     });
 }
 
-function executeCommand(task) {
-    exec(task.cmd, function (error, stdout, stderr) {
+function executeCommand(cmd) {
+    exec(cmd, function (error, stdout, stderr) {
         if (stdout !== null) {
             console.log('stdout: ' + stdout);
         }
