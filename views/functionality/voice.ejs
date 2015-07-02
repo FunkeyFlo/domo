@@ -1,5 +1,6 @@
-script.
+<script>
     var socket = io();
+
     var speech = function (message) {
         if ('speechSynthesis' in window) {
             var msg = new SpeechSynthesisUtterance();
@@ -13,23 +14,35 @@ script.
             alert(message);
         }
     }
+
     if (annyang) {
-        var domo = function (param) {
+
+        var domo = function(param) {
             socket.emit('request', {command: param});
-            //speech(param);
         }
+
+        // Let's define our first command. First the text we expect, and then the function it should call
         var commands = {
+
             'Domo *param': domo
-        }
+
+        };
+
         // Start Debug
         annyang.debug();
+
         // Add our commands to annyang
         annyang.addCommands(commands);
+
         // Start listening. You can call this here, or attach this call to an event, button, etc.
         annyang.start();
     }
-script.
+
+</script>
+
+<script>
     var socket = io();
+
     if ('speechSynthesis' in window) {
         socket.on('message', function (data) {
             var msg = new SpeechSynthesisUtterance();
@@ -45,3 +58,4 @@ script.
             alert(data.message);
         });
     }
+</script>
