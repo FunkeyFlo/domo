@@ -17,21 +17,37 @@ module.exports = function (io) {
 
         // Command execution requests
         socket.on('request', function (data) {
+            var commandFound = false
             console.log('RECEIVED COMMAND: ' + data.command + ' =======================');
             models.Command.findAll({
                 include: [models.Task]
             }).then(function (commands) {
+
                 commands.some(function (command) {
-                    if (checkForCommandMatch(data.command.trim().concat(' '), 0, command.expression.trim().concat(' '), 0)) {
+                    var input = data.command.trim().concat(' ');
+
+                    if (checkForCommandMatch(input, 0, command.expression, 0)) {
+                        var tasks = command.Tasks;
+                        commandFound = true;
+                        var timeTrack;
+
+                        tasks.forEach(function (task) {
+                            setTimeout(function () {
+                                executeCommand(task.cmd);
+                            }, timeTrack += 1250);
+                        });
+
                         socket.emit('message', {
                             message: command.response
                         });
-                    } else {
-                        socket.emit('message', {
-                            message: "commando: " + data.command + " is niet bekend"
-                        });
                     }
                 });
+
+                if (!commandFound) {
+                    socket.emit('message', {
+                        message: "commando: " + data.command + " is niet bekend"
+                    });
+                }
             });
         });
     });
