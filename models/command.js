@@ -2,7 +2,8 @@
 
 module.exports = function(sequelize, DataTypes) {
     var Command = sequelize.define("Command", {
-        text: DataTypes.STRING,
+        title: DataTypes.STRING,
+        expression: DataTypes.STRING,
         response: DataTypes.STRING
     }, {
         classMethods: {

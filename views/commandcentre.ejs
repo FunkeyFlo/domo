@@ -34,7 +34,14 @@
                                     <span class="input-group-addon">
                                         <i class="fa fa-comment fa-fw"></i>
                                     </span>
-                                    <input type="text" placeholder="Commando dat u wilt geven!" name="text"
+                                    <input type="text" placeholder="Naam van het commando" name="title"
+                                           class="form-control">
+                                </div>
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-comment fa-fw"></i>
+                                    </span>
+                                    <input type="text" placeholder="expressie" name="expression"
                                            class="form-control">
                                 </div>
                                 <div class="form-group input-group">
@@ -58,11 +65,11 @@
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <span class="pull-left">
-                                <%= command.text %>
+                                <%= command.title %>
                             </span>
                             <span class="pull-right">
                                 <a href="/<%= command.id %>/destroy"
-                                   onclick="return confirm('Weet u zeker dat u commando <%= command.text %> wilt verwijderen?')"><i
+                                   onclick="return confirm('Weet u zeker dat u commando <%= command.title %> wilt verwijderen?')"><i
                                             class="fa fa-trash"></i>
                                 </a>
                             </span>
@@ -72,6 +79,13 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <fieldset disabled="">
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-file-text fa-fw"></i>
+                                        <i class="fa fa-comment fa-fw"></i>
+                                    </span>
+                                    <input type="text" placeholder="<%= command.expression %>" class="form-control">
+                                </div>
                                 <div class="form-group input-group">
                                     <span class="input-group-addon">
                                         <i class="fa fa-volume-up fa-fw"></i>

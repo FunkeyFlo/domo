@@ -22,7 +22,7 @@ module.exports = function (app, passport) {
 
     app.get('/kaku-configurer', isLoggedIn, function (req, res) {
         res.render('kakuConfigurer', {
-            title: 'Klik aan klik uit signaal instellen',
+            title: 'Klik aan klik uit kanaal instellen',
             loggedInUser: req.user
         });
     });
@@ -40,11 +40,12 @@ module.exports = function (app, passport) {
     });
 
     app.post('/create', isLoggedIn, function (req, res) {
-        console.log(req.param('text'));
+        console.log(req.param('title'));
         console.log(req.param('response'));
         models.Command.create({
             // Cast all characters to lower string to ensure command search accuracy
-            text: req.param('text').toLowerCase(),
+            title: req.param('title').toLowerCase(),
+            expression: req.param('expression'),
             response: req.param('response')
         }).then(function () {
             res.redirect('/command-centre');
@@ -134,77 +135,6 @@ module.exports = function (app, passport) {
             username: 'admin',
             password: bcrypt.hashSync('admin', bcrypt.genSaltSync(8), null)
             //password: 'admin'
-        });
-    });
-
-    app.get('/seed-db', function (req, res) {
-        models.User.create({
-            username: 'admin',
-            password: bcrypt.hashSync('admin', bcrypt.genSaltSync(8), null)
-            //password: 'admin'
-        });
-
-        // 1
-        models.Command.create({
-            text: 'nachtlamp aan',
-            response: 'Nachtlamp staat nu aan!'
-        });
-        models.Command.create({
-            text: 'nachtlamp uit',
-            response: 'Nachtlamp staat nu uit!'
-        });
-
-        // 3
-        models.Command.create({
-            text: 'ventilator aan',
-            response: 'Ventilator staat nu aan!'
-        });
-        models.Command.create({
-            text: 'ventilator uit',
-            response: 'Ventilator staat nu uit!'
-        });
-
-        // 5
-        models.Command.create({
-            text: 'bureaulamp aan',
-            response: 'Bureaulamp staat nu aan!'
-        });
-        models.Command.create({
-            text: 'bureaulamp uit',
-            response: 'Bureaulamp staat nu uit!'
-        });
-
-        models.Task.create({
-            title: 'Nachtlamp aan',
-            cmd: 'kaku C 1 on',
-            CommandId: '1'
-        });
-        models.Task.create({
-            title: 'Nachtlamp uit',
-            cmd: 'kaku C 1 off',
-            CommandId: '2'
-        });
-
-        models.Task.create({
-            title: 'Ventilator aan',
-            cmd: 'kaku C 2 on',
-            CommandId: '3'
-        });
-        models.Task.create({
-            title: 'Ventilator uit',
-            cmd: 'kaku C 2 off',
-            CommandId: '4'
-        });
-
-        models.Task.create({
-            title: 'Bureaulamp aan',
-            cmd: 'kaku zzxyz 20484 on',
-            CommandId: '5'
-        });
-        models.Task.create({
-            title: 'Bureaulamp uit',
-            cmd: 'kaku zzxyz 20484 off',
-            CommandId: '6'
         });
     });
 };
