@@ -1,10 +1,6 @@
 var models = require('../models');
 var exec = require('child_process').exec;
 
-var cookerInUse = false;
-var curtainOpen = false;
-var curtainInUse = false;
-
 module.exports = function (io) {
 
     io.on('connection', function (socket) {
@@ -96,7 +92,7 @@ function checkForCommandMatch(input, currentInputIndex, expression, currentExpre
                     return checkForCommandMatch(input, endOfInputWord + 1, expression, endIndex + 1)
                 }
             } else {
-                return checkForCommandMatch(input, endOfInputWord + 1, expression, endIndex + 1)
+                return checkForCommandMatch(input, endOfInputWord + 1, expression, currentExpressionIndex)
             }
         }
 
