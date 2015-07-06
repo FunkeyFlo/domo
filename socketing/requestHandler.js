@@ -1,5 +1,6 @@
 var models = require('../models');
 var checkForCommandMatch = require('./../functionality/expressionMatcher');
+var exec = require('child_process').exec;
 
 module.exports = function (io) {
 
