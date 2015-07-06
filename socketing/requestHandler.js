@@ -14,13 +14,13 @@ module.exports = function (io) {
         // Command execution requests
         socket.on('request', function (data) {
             var commandFound = false
-            console.log('RECEIVED COMMAND: ' + data.command + ' =======================');
+            console.log('RECEIVED COMMAND: ' + data.command.toLowerCase() + ' =======================');
             models.Command.findAll({
                 include: [models.Task]
             }).then(function (commands) {
 
                 commands.some(function (command) {
-                    var input = data.command.trim().concat(' ');
+                    var input = data.command.trim().concat(' ').toLowerCase();
 
                     if (checkForCommandMatch(input, 0, command.expression, 0)) {
                         var tasks = command.Tasks;
@@ -41,7 +41,7 @@ module.exports = function (io) {
 
                 if (!commandFound) {
                     socket.emit('message', {
-                        message: "commando: " + data.command + " is niet bekend"
+                        message: "opdracht: " + data.command + " is niet bekend"
                     });
                 }
             });
