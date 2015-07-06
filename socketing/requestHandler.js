@@ -1,6 +1,5 @@
 var models = require('../models');
 var checkForCommandMatch = require('./../functionality/expressionMatcher');
-var executeCommand = require('./../functionality/cmdExecutor');
 
 module.exports = function (io) {
 
@@ -22,6 +21,7 @@ module.exports = function (io) {
 
                 commands.some(function (command) {
                     var input = data.command.trim().concat(' ').toLowerCase();
+                    console.log('Expression   :     ' + command.expression);
 
                     if (checkForCommandMatch(input, 0, command.expression, 0)) {
                         var tasks = command.Tasks;
@@ -49,5 +49,21 @@ module.exports = function (io) {
                 }
             });
         });
+    });
+}
+
+function executeCommand(cmd) {
+    exec(cmd, function (error, stdout, stderr) {
+        if (stdout !== null) {
+            console.log('stdout: ' + stdout);
+        }
+
+        if (stderr !== null) {
+            console.log('stderr: ' + stderr);
+        }
+
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
     });
 }
