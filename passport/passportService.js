@@ -24,7 +24,11 @@ module.exports = function (passport) {
     passport.use(new LocalStrategy(
         function (username, password, done) {
             models.User.find(
-                {where: {username: username}}
+                {where: {
+                    username: {
+                        like: username
+                    }
+                }}
             ).then(function (user) {
                     console.log(user);
                     if (!user) {
