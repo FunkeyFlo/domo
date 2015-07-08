@@ -18,21 +18,42 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Domo - Command Centre</h1>
+                    <a href="#" data-toggle="modal" data-target="#addCommand">
+                        <h4>Klik hier om een nieuw commando te maken!</h4>
+                    </a>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Nieuw commando toevoegen!
+
+            <div class="row top-buffer">
+                <div class=col-lg-12 align="center">
+                    <div class="well">
+                        <% for(i = 0; i < commandTotal; i++) { %>
+                        <a href="/command-centre?page=<%= i + 1 %>" type="button" class="btn btn-primary">
+                            <%= i + 1 %>
+                        </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for creating commands -->
+            <div class="modal fade" id="addCommand" tabindex="-2" role="dialog"
+                 aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Nieuw commando aanmaken</h4>
                         </div>
-                        <div class="panel-body">
+                        <div class="modal-body">
                             <form action="/create" method="post">
                                 <div class="form-group input-group">
                                     <span class="input-group-addon">
-                                        <i class="fa fa-comment fa-fw"></i>
+                                        <i class="fa fa-ticket fa-fw"></i>
                                     </span>
                                     <input type="text" placeholder="Naam van het commando" name="title"
                                            class="form-control">
@@ -51,9 +72,10 @@
                                     <input type="text" placeholder="Gewenste response van het systeem" name="response"
                                            class="form-control">
                                 </div>
+
                                 <div class="button">
                                     <input id="signin" type="submit" name="nieuw commando"
-                                           value="nieuw commando aanmaken!" class="btn btn-primary btn-sm btn-block">
+                                           value="nieuw commando aanmaken!" class="btn btn-primary btn-md btn-block">
                                 </div>
                             </form>
                         </div>
@@ -61,10 +83,10 @@
                 </div>
             </div>
 
-    <% for(var i = 0; i<commands.length; i++){%>
-        <% if((i+1) % 2 == 0 ) {%>
-            <div class="row">
-        <% } %>
+            <% for(var i = 0; i < commands.length; i++){ %>
+            <% if(i % 2 == 0 ) { %>
+            <div class="row top-buffer">
+                <% } %>
                 <div class="col-lg-6">
                     <div class="panel panel-green">
                         <div class="panel-heading">
@@ -99,14 +121,17 @@
                                 </div>
                             </fieldset>
                             <!-- Nav tabs -->
-                        <% commands[i].Tasks.forEach(function(task){ %>
                             <ul class="nav nav-pills">
+                                <% commands[i].Tasks.forEach(function(task){ %>
                                 <li>
                                     <a href="#<%= task.id %>" data-toggle="tab"><%= task.title %></a>
                                 </li>
+                                <% }) %>
                             </ul>
-                            <!-- Tab panes -->
+
                             <div class="tab-content">
+                                <% commands[i].Tasks.forEach(function(task){ %>
+                                <!-- Tab panes -->
                                 <div id="<%= task.id %>" class="tab-pane fade">
                                     <div class="row top-buffer"></div>
                                     <fieldset disabled="">
@@ -121,8 +146,8 @@
                                             taak</a>
                                     </fieldset>
                                 </div>
+                                <% }) %>
                             </div>
-                        <% }) %>
                         </div>
                         <!-- /.panel-body -->
                         <a href="#" data-toggle="modal" data-target="#add<%= commands[i].id %>">
@@ -133,56 +158,68 @@
                                 <div class="clearfix"></div>
                             </div>
                         </a>
-
-                        <!-- Modal for adding tasks -->
-                        <div class="modal fade" id="add<%= commands[i].id %>" tabindex="-1" role="dialog"
-                             aria-labelledby="myModalLabel"
-                             aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"><span
-                                                    aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                                        </button>
-                                        <h4 class="modal-title" id="myModalLabel">Taak toevoegen aan commando
-                                            <b><i><%= commands[i].title %></i></b></h4>
-                                    </div>
-                                    <form method="POST" action="/<%= commands[i].id %>/tasks/create">
-                                        <div class="modal-body">
-                                            <div class="form-group input-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-cog fa-fw"></i>
-                                            </span>
-                                                <input type="text" placeholder="Naam van nieuwe taak"
-                                                       class="form-control" name="title">
-                                            </div>
-                                            <div class="form-group input-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-terminal fa-fw"></i>
-                                            </span>
-                                                <input type="text" placeholder="commandline code" class="form-control"
-                                                       name="cmd">
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">
-                                                Sluiten
-                                            </button>
-                                            <input class="btn btn-success" type="submit"
-                                                   value="Nieuwe taak toevoegen!"/>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!-- /.panel -->
                 </div>
-        <% if((i+1) % 2 == 0 ) {%>
+
+
+                <!-- Modal for adding tasks -->
+                <div class="modal fade" id="add<%= commands[i].id %>" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                            aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Taak toevoegen aan commando
+                                    <b><i><%= commands[i].title %></i></b></h4>
+                            </div>
+                            <form method="POST" action="/<%= commands[i].id %>/tasks/create">
+                                <div class="modal-body">
+                                    <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-cog fa-fw"></i>
+                                            </span>
+                                        <input type="text" placeholder="Naam van nieuwe taak"
+                                               class="form-control" name="title">
+                                    </div>
+                                    <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-terminal fa-fw"></i>
+                                            </span>
+                                        <input type="text" placeholder="commandline code" class="form-control"
+                                               name="cmd">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                        Sluiten
+                                    </button>
+                                    <input class="btn btn-success" type="submit"
+                                           value="Nieuwe taak toevoegen!"/>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <% if((i + 1) % 2 == 0 ) { %>
             </div>
-        <% } %>
-    <% } %>
+            <% } %>
+            <% } %>
+            <div class="row top-buffer">
+                <div class=col-lg-12 align="center">
+                    <div class="well">
+                        <% for(i = 0; i < commandTotal; i++) { %>
+                        <a href="/command-centre?page=<%= i + 1 %>" type="button" class="btn btn-primary">
+                            <%= i + 1 %>
+                        </a>
+                        <% } %>
+                    </div>
+                </div>
             </div>
+        </div>
         <!-- /.container-fluid -->
     </div>
     <!-- /#page-wrapper -->

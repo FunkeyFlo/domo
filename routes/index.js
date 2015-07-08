@@ -28,13 +28,29 @@ module.exports = function (app, passport) {
     });
 
     app.get('/command-centre', isLoggedIn, function (req, res) {
-        models.Command.findAll({
-            include: [models.Task]
-        }).then(function (commands) {
-            res.render('commandcentre', {
-                title: 'Command-Centre',
-                commands: commands,
-                loggedInUser: req.user
+        var start;
+        var steps = 6;
+
+        console.log('param : ' + req.param('page'));
+        if (typeof req.param('page') === "undefined") {
+            start = 0;
+        } else {
+            start = 6 * (req.param('page')-1);
+        }
+        console.log('start : ' + start);
+        console.log('end   : ' + steps);
+        models.Command.findAndCountAll().then(function (result) {
+            models.Command.findAll({
+                offset: start,
+                limit: steps,
+                include: [models.Task]
+            }).then(function (commands) {
+                res.render('commandcentre', {
+                    title: 'Command-Centre',
+                    commandTotal: Math.ceil(result.count / 6),
+                    commands: commands,
+                    loggedInUser: req.user
+                });
             });
         });
     });
