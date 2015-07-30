@@ -21,10 +21,17 @@
             socket.emit('request', {command: param});
         }
 
+        var thanks = function() {
+            speech('Alstublieft');
+        }
+
         // Let's define our first command. First the text we expect, and then the function it should call
         var commands = {
 
-            'Domo *param': domo
+            'Domo *param': domo,
+            'dankjewel': thanks,
+            'bedankt': thanks,
+            'dankuwel': thanks
 
         };
 
