@@ -53,7 +53,7 @@ module.exports = function (app, passport) {
                 });
             });
         });
-    });
+    }); 
 
     app.post('/create', isLoggedIn, function (req, res) {
         console.log(req.param('title'));
